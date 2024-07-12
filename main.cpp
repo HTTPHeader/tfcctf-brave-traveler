@@ -5,10 +5,10 @@
 
 using namespace std;
 
-void traverse(vector<set<char>> &g, char start) {
+void traverse(vector<set<char>> &g) {
 	queue<char> q;
     
-	q.push(start);
+	q.push(0);
     
 	while(!q.empty()) {
 		char current = q.front();
@@ -34,6 +34,7 @@ void generateMap(vector<set<char>> &g) {
 	g['e'].insert('a');
 	g['o'].insert('0');
 	g['l'].insert('k');
+	g[0].insert('g');
 	g['k'].insert('.');
 	g['{'].insert('e');
 	g['a'].insert('5');
@@ -56,7 +57,7 @@ int main() {
 
 	generateMap(g);
 
-	traverse(g, 'g');
+	traverse(g);
 
 	return 0;
 }

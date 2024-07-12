@@ -1,4 +1,3 @@
-
 # Writeup for Brave Traveler
 
 ## Explanation of the code
@@ -21,23 +20,22 @@ In the function, we have many modifications to the vector v. The first two are:
 // Code from IDA's cloud-based decompiler
 v1 = std::vector<std::set<char,std::less<char>,std::allocator<char>>,std::allocator<std::set<char,std::less<char>,std::allocator<char>>>>::operator[](a1, '.');
 
-v27 = '\n';
+v28 = '\n';
 
-std::set<char,std::less<char>,std::allocator<char>>::insert(v1, &v27);
+std::set<char,std::less<char>,std::allocator<char>>::insert(v1, &v28);
 
 /* ********************************************************************** */
 
 v2 = std::vector<std::set<char,std::less<char>,std::allocator<char>>,std::allocator<std::set<char,std::less<char>,std::allocator<char>>>>::operator[](a1, '_');
 
-v27 = 'H';
+v28 = 'H';
 
-std::set<char,std::less<char>,std::allocator<char>>::insert(v2, &v27);
+std::set<char,std::less<char>,std::allocator<char>>::insert(v2, &v28);
 ```
   
 
-Translation:
-
 ```c++
+// Translation
 v['.'].insert('\n');
 
 v['_'].insert('H');
@@ -61,6 +59,7 @@ l c
 e a
 o 0
 l k
+NULL g
 k .
 { e
 a 5
@@ -79,30 +78,31 @@ Q i
 ```
   
 
-Next, the program calls the traverse function with parameters being a pointer to the vector and the character **'g'**.
+Next, the program calls the traverse function with the parameter being a pointer to the vector.
 
 
 **'g'** is also the letter that the default prompt of the program starts with: **"go0d luck."**
 
-In the traverse function, a queue of type char is created and the letter **'g'** (the parameter) is pushed into it.
+In the traverse function, a queue of type char is created and the number zero is pushed into it.
 
 ```c++
 // Code from IDA's cloud-based decompiler
 std::queue<char,std::deque<char,std::allocator<char>>>::queue<std::deque<char,std::allocator<char>>,void>(q);
-std::queue<char,std::deque<char,std::allocator<char>>>::push(q, param2);
+LOBYTE(nullByte) = 0;
+std::queue<char,std::deque<char,std::allocator<char>>>::push(v7, &nullByte);
 ```
 
 ```c++
 // Translation
 queue<char> q;
-q.push('g');
+q.push(0);
 ```
 
 Then, there's a while loop that runs until the queue is empty:
 
 ```c++
 // Code from IDA's cloud-based decompiler
-while ( (unsigned __int8)std::queue<char,std::deque<char,std::allocator<char>>>::empty(v10) != 1 )
+while ( (unsigned __int8)std::queue<char,std::deque<char,std::allocator<char>>>::empty(v7) != 1 )
 ```
 
 ```c++
@@ -114,11 +114,11 @@ It gets the front of the queue, saves it, prints it and pops it:
 
 ```c++
 // Code from IDA's cloud-based decompiler
-FRONT_VALUE = *(_BYTE *)std::queue<char,std::deque<char,std::allocator<char>>>::front(v10);
+FRONT_VALUE = *(_BYTE *)std::queue<char,std::deque<char,std::allocator<char>>>::front(q);
 
 std::operator<<<std::char_traits<char>>(&std::cout, (unsigned int)FRONT_VALUE);
 
-std::queue<char,std::deque<char,std::allocator<char>>>::pop(v10);
+std::queue<char,std::deque<char,std::allocator<char>>>::pop(q);
 ```
 
 ```c++
@@ -133,7 +133,7 @@ Then, it gets the set of characters corresponding to the front character from th
   
 ```c++
 // Code from IDA's cloud-based decompiler
-CURRENT_SET = std::vector<std::set<char,std::less<char>,std::allocator<char>>,std::allocator<std::set<char,std::less<char>,std::allocator<char>>>>::operator[](v4, FRONT_VALUE);
+CURRENT_SET = std::vector<std::set<char,std::less<char>,std::allocator<char>>,std::allocator<std::set<char,std::less<char>,std::allocator<char>>>>::operator[](ourVector, FRONT_VALUE);
 
 START = std::set<char,std::less<char>,std::allocator<char>>::begin(CURRENT_SET);
 END = std::set<char,std::less<char>,std::allocator<char>>::end(CURRENT_SET);
@@ -147,7 +147,7 @@ while ( (unsigned __int8)std::operator!=(&START, &END) ) // iterate over set
 {
 	currentValueInSet = *(_BYTE *)std::_Rb_tree_const_iterator<char>::operator*(&START); // obtain value from iterator
 
-	std::queue<char,std::deque<char,std::allocator<char>>>::push(v10, &currentValueInSet); // push value into queue
+	std::queue<char,std::deque<char,std::allocator<char>>>::push(q, &currentValueInSet); // push value into queue
 	std::_Rb_tree_const_iterator<char>::operator++(&START); // increment iterator
 }
 ```
@@ -161,10 +161,10 @@ for(auto element : v[front]) {
 
 Finally, we have this code for the **traverse** function:
 ```c++
-void traverse(vector<set<char>> &v, char start) {
+void traverse(vector<set<char>> &v) {
 	queue<char> q;
 
-    q.push(start);
+    q.push(0);
 
     while(!q.empty()) {
         char front = q.front();
@@ -194,32 +194,35 @@ Let's put our noted values from the graph into a graph visualization tool (e.g. 
 
   
 ![Visual representation of the graph](graph.png)
-<br><br>The problem statement suggests that "There's a whole world left to explore", it's talking about the other components (unconnected parts of the graph). We have 3 components: **"go0d luck.\n"**, **"TFC"**, and another that starts with **'{'**. The last one must be the message.
+<br><br>The problem statement suggests that "There's a whole world left to explore", it's talking about the other components (unconnected parts of the graph). We have 3 components: **"\x00go0d luck.\n"**, **"TFC"**, and another that starts with **'{'**. The last one must be the message.
 
 ## The Solution
 
-We could write the message down by traversing the graph manually, we could put this graph in another program and BFS over it starting with node '{', or we could use a debugging tool to modify the parameter of the traverse function to **'{'** (the start node).
+We could write the message down by traversing the graph manually, we could put this graph in another program and BFS over it starting with node '{', or we could use a debugging tool to modify the first value pushed into the queue to **'{'** (the start node).
 
 I'll use **GDB**.
 
 Commands:
 ```gdb
-b *main
+b *traverse
 r
 ```
 
-Then ```n``` until we reach the ```call traverse...``` instruction.
-  
+Then ```n``` until we pass the ```mov byte ptr [rbp-0x80], 0 # this sets the value to be pushed into the stack to 0``` instruction.
 
-```set $rsi=0x7b``` (set register **RSI**, used as parameter, to the character **'{'**)
+Then we get the address rbp-0x80 and set it to '{' (0x7b) (123)
+
+```gdb
+set *(char*)($rbp - 0x80)='{'
+```
 
 ```c```
 
-The message gets printed:
+Finally, the message gets printed:
 
 ```{ea5ybfs_HQji}```
 
-  
+
 
 ## Flag
 
