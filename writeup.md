@@ -145,10 +145,10 @@ It then iterates over the set and pushes the characters into the queue:
 // Code from IDA's cloud-based decompiler
 while ( (unsigned __int8)std::operator!=(&START, &END) ) // iterate over set
 {
-	currentValueInSet = *(_BYTE *)std::_Rb_tree_const_iterator<char>::operator*(&START); // obtain value from iterator
+    currentValueInSet = *(_BYTE *)std::_Rb_tree_const_iterator<char>::operator*(&START); // obtain value from iterator
 
-	std::queue<char,std::deque<char,std::allocator<char>>>::push(q, &currentValueInSet); // push value into queue
-	std::_Rb_tree_const_iterator<char>::operator++(&START); // increment iterator
+    std::queue<char,std::deque<char,std::allocator<char>>>::push(q, &currentValueInSet); // push value into queue
+    std::_Rb_tree_const_iterator<char>::operator++(&START); // increment iterator
 }
 ```
 
@@ -162,7 +162,7 @@ for(auto element : v[front]) {
 Finally, we have this code for the **traverse** function:
 ```c++
 void traverse(vector<set<char>> &v) {
-	queue<char> q;
+    queue<char> q;
 
     q.push(0);
 
