@@ -216,7 +216,9 @@ Then we get the address rbp-0x80 and set it to '{' (0x7b) (123)
 set *(char*)($rbp - 0x80)='{'
 ```
 
-```c```
+```gdb
+c
+```
 
 Finally, the message gets printed:
 
