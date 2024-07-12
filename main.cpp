@@ -8,19 +8,19 @@ using namespace std;
 void traverse(vector<set<char>> &g, char start) {
 	queue<char> q;
     
-    q.push(start);
+	q.push(start);
     
-    while(!q.empty()) {
-        char current = q.front();
-        
-        cout << current;
-        
-        q.pop();
-        
-        for(auto element : g[current]) {
-            q.push(element);
-        }
-    }
+	while(!q.empty()) {
+		char current = q.front();
+
+		cout << current;
+
+		q.pop();
+
+		for(auto element : g[current]) {
+			q.push(element);
+		}
+	}
 }
 
 void generateMap(vector<set<char>> &g) {
