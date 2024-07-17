@@ -208,7 +208,7 @@ b *traverse
 r
 ```
 
-Then ```n``` until we pass the ```mov byte ptr [rbp-0x80], 0 # this sets the value to be pushed into the stack to 0``` instruction.
+Then ```n``` until we pass the ```mov byte ptr [rbp-0x80], 0``` instruction (this sets the value to be pushed into the queue to 0).
 
 Then we get the address rbp-0x80 and set it to '{' (0x7b) (123)
 
