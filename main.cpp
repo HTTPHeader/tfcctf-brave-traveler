@@ -34,7 +34,7 @@ void generateMap(vector<set<char>> &g) {
     g['e'].insert('a');
     g['o'].insert('0');
     g['l'].insert('k');
-    g[0].insert('g');
+    g[0x0].insert('g');
     g['k'].insert('.');
     g['{'].insert('e');
     g['a'].insert('5');
